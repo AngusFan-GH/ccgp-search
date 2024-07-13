@@ -271,9 +271,10 @@ def on_submit():
         messagebox.showwarning("输入错误", "请填写所有字段")
 
 
-def create_spinbox(row, column, default_value):
-    spinbox = tk.Spinbox(root, from_=default_value,
-                         to=default_value + 9, width=4)
+def create_spinbox(row, column, default_value, from_=None, to=None):
+    spinbox = tk.Spinbox(root, from_=from_, to=to, font=font, width=4)
+    spinbox.delete(0, tk.END)
+    spinbox.insert(0, default_value)
     spinbox.grid(row=row, column=column)
     return spinbox
 
@@ -300,20 +301,42 @@ bg_color = "#f0f0f0"
 fg_color = "#000000"
 root.configure(bg=bg_color)
 
+# 获取当前日期
+current_year = datetime.now().year
+current_month = datetime.now().month
+current_day = datetime.now().day
 
-# 结束日期选择(默认为当前日期)
-tk.Label(root, text="开始日期", font=font, bg=bg_color,
-         fg=fg_color).grid(row=0, column=0, padx=10, pady=5)
-end_year = create_spinbox(1, 1, datetime.now().year)
-end_month = create_spinbox(1, 2, datetime.now().month)
-end_day = create_spinbox(1, 3, datetime.now().day)
+# 设置起始日期的范围
+start_year_from = 2013
+start_year_to = current_year
+start_month_from = 1
+start_month_to = 12
+start_day_from = 1
+start_day_to = 31
+
+# 设置结束日期的范围
+end_year_from = 2013
+end_year_to = current_year
+end_month_from = 1
+end_month_to = 12
+end_day_from = 1
+end_day_to = current_day
 
 # 开始日期选择(默认为当前日期前一年)
+tk.Label(root, text="开始日期", font=font, bg=bg_color,
+         fg=fg_color).grid(row=0, column=0, padx=10, pady=5)
+start_year = create_spinbox(
+    0, 1, max(start_year_from, current_year - 1), start_year_from, start_year_to)
+start_month = create_spinbox(
+    0, 2, current_month, start_month_from, start_month_to)
+start_day = create_spinbox(0, 3, current_day, start_day_from, start_day_to)
+
+# 结束日期选择(默认为当前日期)
 tk.Label(root, text="结束日期", font=font, bg=bg_color,
          fg=fg_color).grid(row=1, column=0, padx=10, pady=5)
-start_year = create_spinbox(0, 1, datetime.now().year - 1)
-start_month = create_spinbox(0, 2, datetime.now().month)
-start_day = create_spinbox(0, 3, datetime.now().day)
+end_year = create_spinbox(1, 1, current_year, end_year_from, end_year_to)
+end_month = create_spinbox(1, 2, current_month, end_month_from, end_month_to)
+end_day = create_spinbox(1, 3, current_day, end_day_from, end_day_to)
 
 # 关键词输入
 tk.Label(root, text="关键词", font=font, bg=bg_color,
